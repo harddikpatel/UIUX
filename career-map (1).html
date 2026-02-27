@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Career Universe</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #06060e;
+    --surface: #0d0d1f;
+    --border: rgba(255,255,255,0.06);
+    --text: #e8e8f0;
+    --muted: #6b6b8a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated starfield background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 70%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(2px 2px at 30% 50%, rgba(150,100,255,0.3) 0%, transparent 100%),
+      radial-gradient(2px 2px at 70% 85%, rgba(100,200,255,0.2) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 48px 24px 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 6vw, 72px);
+    font-weight: 800;
+    line-height: 1;
+    background: linear-gradient(135deg, #fff 0%, #a78bfa 50%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* Main grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto;
+    gap: 10px;
+    padding: 0 16px 60px;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Card base */
+  .card {
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(.23,1,.32,1), box-shadow 0.3s ease, border-color 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.6s both;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: inherit;
+  }
+
+  .card:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .card:hover::before { opacity: 1; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Color themes per category */
+  .dev {
+    background: linear-gradient(135deg, #0a0a1e 0%, #0f1635 100%);
+    --accent: #60a5fa;
+    --glow: rgba(96,165,250,0.15);
+  }
+  .dev::before { background: radial-gradient(circle at top right, rgba(96,165,250,0.08), transparent 60%); }
+  .dev:hover { border-color: rgba(96,165,250,0.4); box-shadow: 0 20px 60px rgba(96,165,250,0.1); }
+
+  .data {
+    background: linear-gradient(135deg, #0a1a0a 0%, #0f2a15 100%);
+    --accent: #4ade80;
+    --glow: rgba(74,222,128,0.15);
+  }
+  .data::before { background: radial-gradient(circle at top right, rgba(74,222,128,0.08), transparent 60%); }
+  .data:hover { border-color: rgba(74,222,128,0.4); box-shadow: 0 20px 60px rgba(74,222,128,0.1); }
+
+  .ai {
+    background: linear-gradient(135deg, #1a0a1e 0%, #2a0f35 100%);
+    --accent: #c084fc;
+    --glow: rgba(192,132,252,0.15);
+  }
+  .ai::before { background: radial-gradient(circle at top right, rgba(192,132,252,0.08), transparent 60%); }
+  .ai:hover { border-color: rgba(192,132,252,0.4); box-shadow: 0 20px 60px rgba(192,132,252,0.1); }
+
+  .security {
+    background: linear-gradient(135deg, #1a0a0a 0%, #2a1010 100%);
+    --accent: #f87171;
+    --glow: rgba(248,113,113,0.15);
+  }
+  .security::before { background: radial-gradient(circle at top right, rgba(248,113,113,0.08), transparent 60%); }
+  .security:hover { border-color: rgba(248,113,113,0.4); box-shadow: 0 20px 60px rgba(248,113,113,0.1); }
+
+  .cloud {
+    background: linear-gradient(135deg, #0a1520 0%, #0f2535 100%);
+    --accent: #38bdf8;
+    --glow: rgba(56,189,248,0.15);
+  }
+  .cloud::before { background: radial-gradient(circle at top right, rgba(56,189,248,0.08), transparent 60%); }
+  .cloud:hover { border-color: rgba(56,189,248,0.4); box-shadow: 0 20px 60px rgba(56,189,248,0.1); }
+
+  .product {
+    background: linear-gradient(135deg, #1a1500 0%, #2a2200 100%);
+    --accent: #fbbf24;
+    --glow: rgba(251,191,36,0.15);
+  }
+  .product::before { background: radial-gradient(circle at top right, rgba(251,191,36,0.08), transparent 60%); }
+  .product:hover { border-color: rgba(251,191,36,0.4); box-shadow: 0 20px 60px rgba(251,191,36,0.1); }
+
+  .marketing {
+    background: linear-gradient(135deg, #1a0a15 0%, #2a0f20 100%);
+    --accent: #fb7185;
+    --glow: rgba(251,113,133,0.15);
+  }
+  .marketing::before { background: radial-gradient(circle at top right, rgba(251,113,133,0.08), transparent 60%); }
+  .marketing:hover { border-color: rgba(251,113,133,0.4); box-shadow: 0 20px 60px rgba(251,113,133,0.1); }
+
+  .creative {
+    background: linear-gradient(135deg, #0a1a1a 0%, #0f2a2a 100%);
+    --accent: #2dd4bf;
+    --glow: rgba(45,212,191,0.15);
+  }
+  .creative::before { background: radial-gradient(circle at top right, rgba(45,212,191,0.08), transparent 60%); }
+  .creative:hover { border-color: rgba(45,212,191,0.4); box-shadow: 0 20px 60px rgba(45,212,191,0.1); }
+
+  /* Card elements */
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  .card-title.big {
+    font-size: 20px;
+  }
+
+  .role-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .role-list li {
+    font-size: 11px;
+    color: rgba(232,232,240,0.75);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.5;
+  }
+
+  .role-list li::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.06);
+    color: var(--accent);
+    border: 1px solid rgba(255,255,255,0.08);
+    margin-top: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* Grid placements */
+  .span-3 { grid-column: span 3; }
+  .span-4 { grid-column: span 4; }
+  .span-6 { grid-column: span 6; }
+  .span-12 { grid-column: span 12; }
+  .row-2 { grid-row: span 2; }
+
+  /* Center card / hero card */
+  .center-card {
+    grid-column: span 12;
+    background: linear-gradient(135deg, #12063a 0%, #06122a 50%, #061230 100%);
+    border: 1px solid rgba(167,139,250,0.2);
+    border-radius: 20px;
+    padding: 32px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .center-card::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .center-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(18px, 3vw, 28px);
+    font-weight: 800;
+    background: linear-gradient(90deg, #a78bfa, #38bdf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .center-desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+    max-width: 500px;
+    line-height: 1.7;
+  }
+
+  .center-badge {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 8px 20px;
+    background: linear-gradient(90deg, rgba(167,139,250,0.2), rgba(56,189,248,0.2));
+    border: 1px solid rgba(167,139,250,0.3);
+    border-radius: 100px;
+    color: #c4b5fd;
+    white-space: nowrap;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Salary badge */
+  .salary {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 9px;
+    color: var(--accent);
+    opacity: 0.6;
+    letter-spacing: 1px;
+  }
+
+  /* Section divider label */
+  .section-label {
+    grid-column: span 12;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 8px 0 0 4px;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .span-3, .span-4, .span-6 { grid-column: span 6; }
+  }
+  @media (max-width: 600px) {
+    .span-3, .span-4, .span-6, .span-12 { grid-column: span 12; }
+    .center-card { flex-direction: column; text-align: center; }
+    .grid { gap: 8px; padding: 0 10px 40px; }
+  }
+
+  /* Floating tooltip */
+  .tooltip {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(13,13,31,0.95);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    pointer-events: none;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    animation: fadeUp 0.4s both;
+  }
+
+  /* Stagger animations */
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.10s; }
+  .card:nth-child(3) { animation-delay: 0.15s; }
+  .card:nth-child(4) { animation-delay: 0.20s; }
+  .card:nth-child(5) { animation-delay: 0.25s; }
+  .card:nth-child(6) { animation-delay: 0.30s; }
+  .card:nth-child(7) { animation-delay: 0.35s; }
+  .card:nth-child(8) { animation-delay: 0.40s; }
+  .card:nth-child(9) { animation-delay: 0.45s; }
+  .card:nth-child(10) { animation-delay: 0.50s; }
+  .card:nth-child(11) { animation-delay: 0.55s; }
+  .card:nth-child(12) { animation-delay: 0.60s; }
+  .card:nth-child(13) { animation-delay: 0.65s; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <p class="hero-label">Career Exploration Map · Tech Industry 2025</p>
+  <h1>Tech Career Universe</h1>
+  <p class="subtitle">Beyond UI/UX — Every Path, Every Possibility</p>
+</div>
+
+<div class="grid">
+
+  <!-- Top Banner -->
+  <div class="center-card card" style="animation-delay:0s">
+    <div>
+      <div class="center-title">🚀 From UI/UX — Where Can You Go?</div>
+      <p class="center-desc">UI/UX is just one constellation in the tech universe. Explore 8 major domains with 30+ roles — each path has its own growth trajectory, salary range, and required skills.</p>
+    </div>
+    <div class="center-badge">30+ Roles · 8 Domains</div>
+  </div>
+
+  <!-- ROW 1: Dev, Data, AI -->
+  <div class="card dev span-4">
+    <span class="card-icon">💻</span>
+    <div class="card-title big">Development</div>
+    <ul class="role-list">
+      <li>Frontend Developer (React, Vue)</li>
+      <li>Backend Developer (Python, Node)</li>
+      <li>Full Stack Developer</li>
+      <li>Mobile Developer (iOS / Android)</li>
+      <li>UX Engineer / Design Dev</li>
+    </ul>
+    <span class="tag">Closest to UI/UX ★</span>
+  </div>
+
+  <div class="card data span-4">
+    <span class="card-icon">📊</span>
+    <div class="card-title big">Data & Analytics</div>
+    <ul class="role-list">
+      <li>Data Analyst (SQL, Power BI)</li>
+      <li>Data Scientist (Python, ML)</li>
+      <li>Business Analyst</li>
+      <li>Data Engineer</li>
+      <li>BI Developer</li>
+    </ul>
+    <span class="tag">High Demand</span>
+  </div>
+
+  <div class="card ai span-4">
+    <span class="card-icon">🤖</span>
+    <div class="card-title big">AI & Machine Learning</div>
+    <ul class="role-list">
+      <li>ML Engineer</li>
+      <li>AI Product Manager</li>
+      <li>Prompt Engineer</li>
+      <li>LLM Specialist</li>
+      <li>Computer Vision Engineer</li>
+    </ul>
+    <span class="tag">🔥 Hottest Field 2025</span>
+  </div>
+
+  <!-- ROW 2: Security + Cloud (larger) + Product -->
+  <div class="card security span-3">
+    <span class="card-icon">🛡️</span>
+    <div class="card-title">Cybersecurity</div>
+    <ul class="role-list">
+      <li>Security Analyst</li>
+      <li>Ethical Hacker / Pen Tester</li>
+      <li>Cloud Security Engineer</li>
+      <li>SOC Analyst</li>
+    </ul>
+    <span class="tag">Top Salary</span>
+  </div>
+
+  <div class="card cloud span-6">
+    <span class="card-icon">☁️</span>
+    <div class="card-title big">Cloud & DevOps</div>
+    <ul class="role-list">
+      <li>Cloud Engineer (AWS / Azure / GCP)</li>
+      <li>DevOps Engineer</li>
+      <li>Site Reliability Engineer (SRE)</li>
+      <li>Platform Engineer</li>
+      <li>Solutions Architect</li>
+    </ul>
+    <span class="tag">Remote Friendly</span>
+  </div>
+
+  <div class="card product span-3">
+    <span class="card-icon">📱</span>
+    <div class="card-title">Product & Management</div>
+    <ul class="role-list">
+      <li>Product Manager (PM)</li>
+      <li>Scrum Master</li>
+      <li>Technical PM</li>
+      <li>Agile Coach</li>
+    </ul>
+    <span class="tag">No Code Needed</span>
+  </div>
+
+  <!-- ROW 3: Marketing + Creative split into 3 equal cards -->
+  <div class="card marketing span-4">
+    <span class="card-icon">📢</span>
+    <div class="card-title">Digital Marketing & Growth</div>
+    <ul class="role-list">
+      <li>SEO Specialist</li>
+      <li>Performance Marketer</li>
+      <li>Growth Hacker</li>
+      <li>Content Strategist</li>
+      <li>Social Media Manager</li>
+    </ul>
+    <span class="tag">Creative + Analytical</span>
+  </div>
+
+  <div class="card creative span-4">
+    <span class="card-icon">🎨</span>
+    <div class="card-title">Creative & Emerging Tech</div>
+    <ul class="role-list">
+      <li>Motion Designer (After Effects)</li>
+      <li>3D Designer (Blender)</li>
+      <li>Game Designer (Unity / Unreal)</li>
+      <li>AR / VR Designer</li>
+      <li>No-Code Dev (Webflow, Framer)</li>
+      <li>Design Technologist</li>
+    </ul>
+    <span class="tag">⭐ Easiest Switch from UI/UX</span>
+  </div>
+
+  <div class="card" style="grid-column:span 4;background:linear-gradient(135deg,#0f0f22,#181030);--accent:#a78bfa;border-color:rgba(167,139,250,0.12);">
+    <span class="card-icon">🌐</span>
+    <div class="card-title" style="color:#a78bfa;">UI/UX Growth Path</div>
+    <ul class="role-list" style="--accent:#a78bfa;">
+      <li>Product Designer</li>
+      <li>UX Researcher</li>
+      <li>Design Lead / Head of Design</li>
+      <li>Design System Architect</li>
+      <li>UX Strategist</li>
+    </ul>
+    <span class="tag" style="color:#a78bfa;">Stay & Level Up</span>
+  </div>
+
+  <!-- Bottom: Match table card -->
+  <div class="card span-12" style="background:linear-gradient(135deg,#0d0d1f,#0a1520);border-color:rgba(56,189,248,0.15);animation-delay:0.55s;">
+    <div class="card-title" style="--accent:#38bdf8;font-size:14px;margin-bottom:18px;">⚡ Quick Match — Find Your Path</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+      <div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.05);">
+        <div style="font-size:11px;color:#60a5fa;margin-bottom:6px;font-family:'Syne',sans-serif;font-weight:700;">Love Logic & Problem Solving</div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.8;">→ Development<br>→ Data Science<br>→ Cloud / DevOps</div>
+      </div>
+      <div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.05);">
+        <div style="font-size:11px;color:#c084fc;margin-bottom:6px;font-family:'Syne',sans-serif;font-weight:700;">Love Future Tech</div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.8;">→ AI / ML<br>→ AR / VR Design<br>→ Prompt Engineering</div>
+      </div>
+      <div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.05);">
+        <div style="font-size:11px;color:#4ade80;margin-bottom:6px;font-family:'Syne',sans-serif;font-weight:700;">Love People & Strategy</div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.8;">→ Product Manager<br>→ Business Analyst<br>→ Growth Hacker</div>
+      </div>
+      <div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.05);">
+        <div style="font-size:11px;color:#2dd4bf;margin-bottom:6px;font-family:'Syne',sans-serif;font-weight:700;">Creative + Tech Hybrid</div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.8;">→ Motion Designer<br>→ UX Engineer<br>→ No-Code Developer</div>
+      </div>
+      <div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.05);">
+        <div style="font-size:11px;color:#f87171;margin-bottom:6px;font-family:'Syne',sans-serif;font-weight:700;">Love Security & Challenges</div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.8;">→ Cybersecurity<br>→ Ethical Hacking<br>→ Cloud Security</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="tooltip">✦ Hover over cards to explore each domain</div>
+
+</body>
+</html>
